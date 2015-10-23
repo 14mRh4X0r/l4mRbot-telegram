@@ -44,6 +44,7 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
     me = Hashie::Mash.new(bot.api.get_me).result
     $log.debug "I am #{me.username}"
     bot.listen do |msg|
+      $log.debug "Got a msg: #{msg.inspect}"
       if msg.text and msg.text[0] == '/'
         cmd = msg.text.split[0][1..-1]
         cmd, who = cmd.split '@' if cmd.include? '@'
