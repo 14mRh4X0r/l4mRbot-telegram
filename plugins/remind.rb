@@ -1,7 +1,7 @@
 require 'chronic'
 require 'rufus-scheduler'
 
-msg_re = /^(?<who>@?\w+|me) (?<at>.*?)(?<what>(?:to|that|about).+)$/
+msg_re = /^(?<who>@?\w+|me)\s+(?<at>.*?)(?<what>(?:(?:not\s+)?to|that|about)\b.+)$/
 
 def remind bot, msg, who, at, what, by_whom = nil
   Rufus::Scheduler.s.at at do
