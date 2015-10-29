@@ -15,7 +15,7 @@ command 'list' do |bot, msg|
     old_stdout.close
   end
 
-  text = if data.players.empty?
+  text = if data.players.nil?
     "No players online"
   else
     "#{data.players.size} player#{"s" if data.players.size != 1} online: #{data.players.join ', '}"
