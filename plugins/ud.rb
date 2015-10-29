@@ -20,12 +20,16 @@ end
 def do_query bot, msg
   q = msg.text
   q = q[/(?<=\s).*/] if q.start_with? '/ud'
-  text = UD.query(q).map do |r|
-    "*#{r[:word]}* (#{r[:upvotes]}/#{r[:downvotes]}):\n" \
-    "#{escape r[:definition]}\n\n" \
-    "_Example:_\n" \
-    "#{escape r[:example]}"
-  end.join
+  text = begin
+    UD.query(q).map do |r|
+      "*#{r[:word]}* (#{r[:upvotes]}/#{r[:downvotes]}):\n" \
+      "#{escape r[:definition]}\n\n" \
+      "_Example:_\n" \
+      "#{escape r[:example]}"
+    end.join
+  rescue
+    "Something went horribly wrong."
+  end
   text = "_No results._" if text.nil? || text.empty?
   bot.api.send_message chat_id: msg.chat.id,
                        text: text,
