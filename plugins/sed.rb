@@ -7,7 +7,7 @@ line_hist = Hash.new {|hash, key| hash[key] = Array.new}
 always do |bot, msg|
   $log.debug('sed') { "Such message: #{msg.text}\n" }
   broken = false
-  if m = sed_regex.match(msg.text)
+  if m = sed_regex.match(msg.text) and msg.from.id != 101270669
     $log.debug('sed') { "They don't think it match, but it do\n" }
     global = m[:flags].include? 'g'
     flags  = Regexp::IGNORECASE if m[:flags].include? 'i'
@@ -22,12 +22,14 @@ always do |bot, msg|
                            reply_to_message_id: msg.message_id
     end
 
+    replace = m[:replace].gsub /\\#{m[:sep]}/, m[:sep]
+
     line_hist[msg.chat.id].each do |entry|
       if regex.match entry.msg
         if global
-          res = entry.msg.gsub(regex, m[:replace])
+          res = entry.msg.gsub(regex, replace)
         else
-          res = entry.msg.sub(regex, m[:replace])
+          res = entry.msg.sub(regex, replace)
         end
 
         if res != entry.msg
