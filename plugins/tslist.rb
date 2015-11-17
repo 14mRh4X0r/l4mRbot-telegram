@@ -1,5 +1,4 @@
 require 'teamspeak-ruby'
-require_relative 'tslist_password'
 
 command 'tslist' do |bot, msg|
   bot.api.send_chat_action chat_id: msg.chat.id,

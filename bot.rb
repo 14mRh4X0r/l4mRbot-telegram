@@ -6,11 +6,10 @@ require 'telegram/bot'
 require 'logger'
 require 'hashie'
 
-require_relative 'token'
-
 $log = Logger.new STDOUT
-$log.level = Logger::INFO
 $log.datetime_format = "%Y-%m-%d %H:%M:%S"
+
+require_relative 'config'
 
 $commands = Hash.new
 $matches = Hash.new
@@ -18,26 +17,28 @@ $replies = Hash.new
 $always = Array.new
 
 def command cmd, &block
-  $log.debug "Adding command: #{cmd}"
+  loc = caller_locations(1, 1).first
+  $log.debug "Adding command: #{cmd} from #{loc.path}:#{loc.lineno}"
   $commands[cmd] = block
 end
 
 def match regex, &block
-  $log.debug "Adding match: #{regex}"
+  loc = caller_locations(1, 1).first
+  $log.debug "Adding match: #{regex} from #{loc.path}:#{loc.lineno}"
   $matches[regex] = block
 end
 
 def always &block
-  $log.debug "Adding always"
+  loc = caller_locations(1, 1).first
+  $log.debug "Adding always from #{loc.path}:#{loc.lineno}"
   $always << block
 end
 
 def reply id, &block
-  $log.debug "Adding reply: #{id}"
+  loc = caller_locations(1, 1).first
+  $log.debug "Adding reply: #{id} from #{loc.path}:#{loc.lineno}"
   $replies[id] = block
 end
-
-require_relative 'plugins'
 
 def process bot, msg
   $log.debug "Got a msg: #{msg.inspect}"
@@ -45,7 +46,7 @@ def process bot, msg
     cmd = msg.text.split[0][1..-1]
     cmd, who = cmd.split '@' if cmd.include? '@'
     $log.debug "Parsing command: #{msg.text.inspect}, #{cmd.inspect}, #{who.inspect}"
-    $commands[cmd].call(bot, msg) if $commands.has_key? cmd and (who.nil? or who.eql? me.username)
+    $commands[cmd].call(bot, msg) if $commands.has_key? cmd and (who.nil? or who.eql? $me.username)
   end
 
   $matches.each do |regex, block|
@@ -67,7 +68,8 @@ end
 Telegram::Bot::Client.run(TOKEN) do |bot|
   begin
     $me = Hashie::Mash.new(bot.api.get_me).result
-    $log.debug "I am #{me.username}"
+    $log.debug "I am #{$me.username}"
+    require_relative "plugins"
     bot.listen {|msg| process bot, msg}
   rescue Interrupt
     $log.warn "Caught interrupt -- quitting"
