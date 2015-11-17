@@ -17,26 +17,22 @@ $replies = Hash.new
 $always = Array.new
 
 def command cmd, &block
-  loc = caller_locations(1, 1).first
-  $log.debug "Adding command: #{cmd} from #{loc.path}:#{loc.lineno}"
+  $log.debug "Adding command: #{cmd} from #{caller.first}"
   $commands[cmd] = block
 end
 
 def match regex, &block
-  loc = caller_locations(1, 1).first
-  $log.debug "Adding match: #{regex} from #{loc.path}:#{loc.lineno}"
+  $log.debug "Adding match: #{regex} from #{caller.first}"
   $matches[regex] = block
 end
 
 def always &block
-  loc = caller_locations(1, 1).first
-  $log.debug "Adding always from #{loc.path}:#{loc.lineno}"
+  $log.debug "Adding always from #{caller.first}"
   $always << block
 end
 
 def reply id, &block
-  loc = caller_locations(1, 1).first
-  $log.debug "Adding reply: #{id} from #{loc.path}:#{loc.lineno}"
+  $log.debug "Adding reply: #{id} from #{caller.first}"
   $replies[id] = block
 end
 
