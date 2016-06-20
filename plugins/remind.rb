@@ -38,7 +38,7 @@ msg_re = /^(?<who>@?\w+|me)\s+(?<at>.*?)(?<what>(?:(?:not\s+)?to|that|about)\b.+
 def remind bot, msg, who, at, what, by_whom = nil
   Rufus::Scheduler.s.at at do
     if by_whom.nil?
-      RPL.each {|k, v| what.gsub!(k, v)}
+      RPL_OWN.each {|k, v| what.gsub!(k, v)}
     else
       RPL_OTHER.each {|k, v| what.gsub!(k, v)}
     end
