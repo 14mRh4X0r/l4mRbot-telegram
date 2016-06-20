@@ -39,9 +39,9 @@ always do |bot, msg|
     $log.info('log') { "#{prefix(msg)} sent a contact: #{print_attrs msg.contact}" }
   elsif msg.location
     $log.info('log') { "#{prefix(msg)} sent a location: #{print_attrs msg.location}" }
-  elsif msg.new_chat_participant
+  elsif msg.new_chat_member
     $log.info('log') { "#{prefix(msg)} joined the group" }
-  elsif msg.left_chat_participant
+  elsif msg.left_chat_member
     $log.info('log') { "#{prefix(msg)} left the group" }
   elsif msg.new_chat_title
     $log.info('log') { "#{prefix(msg)} changed the group title to #{msg.new_chat_title}" }
