@@ -15,7 +15,7 @@ always do |bot, msg|
     flags |= Regexp::MULTILINE  if m[:flags].include? 'm'
 
     begin
-      r = m[:regex].gsub /\\#{m[:sep]}/, m[:sep]
+      r = m[:regex].gsub /\\#{m[:sep] == '\\' ? '\\\\' : m[:sep]}/, m[:sep]
       regex = Regexp.new r, flags
     rescue RegexpError => e
       bot.api.send_message chat_id:             msg.chat.id,
@@ -23,7 +23,7 @@ always do |bot, msg|
                            reply_to_message_id: msg.message_id
     end
 
-    replace = m[:replace].gsub /\\#{m[:sep]}/, m[:sep]
+    replace = m[:replace].gsub /\\#{m[:sep] == '\\' ? '\\\\' : m[:sep]}/, m[:sep]
 
     line_hist[msg.chat.id].each do |entry|
       if regex.match entry.msg
