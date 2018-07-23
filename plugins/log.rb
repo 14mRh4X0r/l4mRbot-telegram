@@ -39,10 +39,18 @@ always do |bot, msg|
     $log.info('log') { "#{prefix(msg)} sent a contact: #{print_attrs msg.contact}" }
   elsif msg.location
     $log.info('log') { "#{prefix(msg)} sent a location: #{print_attrs msg.location}" }
-  elsif msg.new_chat_member
-    $log.info('log') { "#{prefix(msg)} joined the group" }
+  elsif msg.new_chat_members
+    if msg.new_chat_members.length == 1 and msg.new_chat_members[0].id == msg.from.id
+      $log.info('log') { "#{prefix(msg)} joined the group" }
+    else
+      $log.info('log') { "#{prefix(msg)} invited #{msg.new_chat_members.map {|u| user_str u}.join ?,}" }
+    end
   elsif msg.left_chat_member
-    $log.info('log') { "#{prefix(msg)} left the group" }
+    if msg.from.id == msg.left_chat_member.id
+      $log.info('log') { "#{prefix(msg)} left the group" }
+    else
+      $log.info('log') { "#{prefix(msg)} kicked #{user_str(msg.left_chat_member)}" }
+    end
   elsif msg.new_chat_title
     $log.info('log') { "#{prefix(msg)} changed the group title to #{msg.new_chat_title}" }
   elsif msg.new_chat_photo
