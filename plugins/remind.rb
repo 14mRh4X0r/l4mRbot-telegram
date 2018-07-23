@@ -50,9 +50,13 @@ end
 command 'remind' do |bot, msg|
   m = msg_re.match(msg.text[/(?<= ).+/])
   unless m
-    bot.api.send_message chat_id: msg.chat.id,
-                         text: "Uhh, what?",
-                         reply_to_message_id: msg.message_id
+    begin
+      bot.api.send_message chat_id: msg.chat.id,
+			   text: "Uhh, what?",
+			   reply_to_message_id: msg.message_id
+    rescue
+      # whatever
+    end
     next
   end
 
