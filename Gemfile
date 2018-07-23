@@ -8,4 +8,4 @@ gem "minecraft-query"
 gem "chronic"
 gem "rufus-scheduler"
 
-gem "pry-debugger", group: :development
+gem "pry-byebug", group: :development
