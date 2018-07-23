@@ -8,6 +8,7 @@ require 'hashie'
 
 $log = Logger.new STDOUT
 $log.datetime_format = "%Y-%m-%d %H:%M:%S"
+STDOUT.sync = true
 
 require_relative 'config'
 
